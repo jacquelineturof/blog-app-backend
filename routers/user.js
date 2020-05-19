@@ -20,15 +20,18 @@ router.post('/user', async (req, res) => {
 
 // Login
 router.post('/user/login', async (req,res) => {
+    console.log('login route')
     const username = req.body.username
     const password = req.body.password
-
+    console.log(username)
+    console.log(password)
     try {
         const user = await findByCredentials(username, password)
+        console.log('user: '. user)
         const token = await generateAuthToken(user)
 
         res.send({ 
-            username:user.username,
+            username: user.username,
             isAdmin: user.isAdmin,
             token 
         })
