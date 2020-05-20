@@ -10,10 +10,11 @@ const router = new express.Router()
 router.post('/post/:id/comment', authenticate, async (req, res) => {
     const postId = req.params.id
     const ownerId = req.user._id
+    const username = req.user.username
     const text = req.body.text
     const created = moment().format("MMMM Do YYYY")
 
-    const newComment = new Comment({ postId, ownerId, text, created })
+    const newComment = new Comment({ postId, ownerId, username, text, created })
 
     try {
         await newComment.save()
@@ -38,6 +39,7 @@ router.put('/comment/:id', authenticate, async (req, res) => {
     const commentId = req.params.id
     const updatedText = req.body.text 
 
+    console.log(updatedText)
     try {
         const comment = await Comment.findById(commentId)
 
@@ -45,7 +47,7 @@ router.put('/comment/:id', authenticate, async (req, res) => {
             throw new Error('You cannot edit this comment.')
         } else {
             comment.text = updatedText
-            await omment.save()
+            await comment.save()
             res.send({ message: 'Comment Updated' })
         }
     } catch (e) {
@@ -57,7 +59,7 @@ router.delete('/comment/:id', authenticate, async (req, res) => {
     const commentId = req.params.id
 
     try {
-
+        const comment = await Comment.findById(commentId)
         if (comment.ownerId.toString() !== req.user._id.toString()) {
             throw new Error('You cannot delete this comment.')
         } else {

@@ -9,6 +9,11 @@ const commentSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true
     },
+    username: {
+        type: String,
+        required: true,
+        unique: true
+    },
     text: {
         type: String,
         required: true
